@@ -1,9 +1,5 @@
 class Key {
-    private signature: number;
-
-    constructor() {
-        this.signature = Math.random();
-    }
+    private signature: number = Math.random();
 
     getSignature(): number {
         return this.signature;
@@ -11,11 +7,7 @@ class Key {
 }
 
 class Person {
-    private key: Key;
-
-    constructor(key: Key) {
-        this.key = key;
-    }
+    constructor(private key: Key) {}
 
     getKey(): Key {
         return this.key;
@@ -23,53 +15,40 @@ class Person {
 }
 
 abstract class House {
-    door: boolean;
-    key: Key;
-    tenants: Person[] = [];
+    protected door: boolean;
+    protected key: Key;
+    protected tenants: Person[];
 
-    constructor(door: boolean, key: Key) {
-        this.door = door;
-        this.key = key;
-    }
+    constructor(key: Key) {}
 
     comeIn(person: Person): void {
         if (this.door) {
-            this.tenants.push(person);
-            console.log('Person entered the house.');
+        this.tenants.push(person);
+        console.log("The door is open");
         } else {
-            console.log('The door is closed. Person cannot enter.');
+        console.log("The door is closed");
         }
     }
-
-    abstract openDoor(key: Key): void;
 }
 
 class MyHouse extends House {
     openDoor(key: Key): void {
-        if (key.getSignature() === this.key.getSignature()) {
-            this.door = true;
-            console.log('The door is now open.');
+        if (key.getSignature() === key.getSignature()) {
+        this.door = true;
+        console.log("The door is open");
         } else {
-            console.log('Incorrect key. The door remains closed.');
+        console.log("The door is closed");
         }
     }
 }
 
-    const key = new Key();
-    const person = new Person(key);
-    const myHouse = new MyHouse(false, key);
+const key = new Key();
 
-    console.log('Initial state:');
-    console.log('Door status:', myHouse.door);
+const house = new MyHouse(key);
+const person = new Person(key);
 
-  myHouse.comeIn(person); // The door is closed. Person cannot enter.
+house.openDoor(person.getKey());
 
-  myHouse.openDoor(new Key()); // Incorrect key. The door remains closed.
+house.comeIn(person);
 
-  myHouse.openDoor(key); // The door is now open.
-
-    console.log('Updated state:');
-    console.log('Door status:', myHouse.door);
-    myHouse.comeIn(person); // Person entered the house.
-    
 export {};
